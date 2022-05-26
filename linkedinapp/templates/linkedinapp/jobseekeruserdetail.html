@@ -1,0 +1,40 @@
+{% extends 'linkedinapp/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="container" style="margin-top: 30px;">
+        <fieldset class="form-group">
+            <h2 style="color: white;">Hello {{user.username}}</h2>
+            <legend class="border-bottom mb-4" style="color: white;">Basic Detail</legend>
+            <h4><strong>Email: </strong>{{user.email}}</h4>
+            <h4><strong>Being: </strong>{{current_user_type}}</h4>
+            <h4><strong>First Name: </strong>{{first_name}}</h4>
+            <h4><strong>Last Name: </strong>{{last_name}}</h4>
+            <h4><strong>Salary: </strong>{{current_salary}}</h4>
+            <h4><strong>Annualy/Monthly Paid: </strong>{{is_annualy_monthly}}</h4>
+            <h4><strong>Currency: </strong>{{currency}}</h4>
+            <legend class="border-bottom mb-4" style="color: white;">Education Detail</legend>
+            <h4><strong>Degree Name: </strong>{{degree_name|join:", "}}</h4>
+            <h4><strong>Institute Name: </strong>{{institute_name|join:", "}}</h4>
+            <h4><strong>Starting Date: </strong>{{starting_date|join:", "}}</h4>
+            <h4><strong>Completition Date: </strong>{{completition_date|join:", "}}</h4>
+            <h4><strong>Percentage: </strong>{{percentage|join:", "}}</h4>
+            <h4><strong>CGPA: </strong>{{cgpa|join:", "}}</h4>
+            <legend class="border-bottom mb-4" style="color: white;">Experience Detail</legend>
+            <h4><strong>Current Job? </strong>{{is_current_job|join:", "}}</h4>
+            <h4><strong>Start Date: </strong>{{start_date|join:", "}}</h4>
+            <h4><strong>End Date: </strong>{{end_date|join:", "}}</h4>
+            <h4><strong>Job Title: </strong>{{job_title|join:", "}}</h4>
+            <h4><strong>Job Description: </strong>{{job_description|join:", "}}</h4>
+            <h4><strong>Company Name: </strong>{{company_name|join:", "}}</h4>
+            <h4><strong>Company Address: </strong>{{company_address|join:", "}}</h4>
+            <legend class="border-bottom mb-4" style="color: white;">SkillSet Detail</legend>
+            <h4><strong>Skill Name: </strong>{{skill_name|join:", "}}</h4>
+            <h4><strong>Skill Level: </strong>{{skill_level|join:", "}}</h4>
+        </fieldset>
+        <div class="form-group">
+            <small class="text-muted ml-3" >Want to shift back to the Home? <a href="{% url 'home' %}">Click Here</a></small>
+        </div>
+    </div>
+{% endblock %}

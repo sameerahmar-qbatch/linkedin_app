@@ -1,0 +1,24 @@
+{% extends 'linkedinapp/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="container" style="margin-top: 30px;">
+        <fieldset class="form-group">
+            <h2 style="color: white;">Hello {{user.username}}</h2>
+            <legend class="border-bottom mb-4" style="color: white;">Basic Detail</legend>
+            <h4><strong>Email: </strong>{{user.email}}</h4>
+            <h4><strong>Being: </strong>{{current_user_type}}</h4>
+            <h4><strong>Comapny Name: </strong>{{company_name}}</h4>
+            <h4><strong>Comapny Description: </strong>{{company_description}}</h4>
+            <h4><strong>Establishment Date: </strong>{{establishment_date}}</h4>
+            <h4><strong>Company Website Url: </strong>{{company_website_url}}</h4>
+            <legend class="border-bottom mb-4" style="color: white;">Job Post</legend>
+            <h4><strong>Job Description: </strong>{{job_description|join:", "}}</h4>
+            <h4><strong>Active Yet? </strong>{{is_active|join:", "}}</h4>
+        </fieldset>
+        <div class="form-group">
+            <small class="text-muted ml-3" >Want to shift back to the Home? <a href="{% url 'home' %}">Click Here</a></small>
+        </div>
+    </div>
+{% endblock %}
