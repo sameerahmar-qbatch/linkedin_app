@@ -37,7 +37,6 @@ def useraccount(request):
                 return redirect('seekerprofile')
             elif usertype_name == 'company':
                 return redirect('company')
-            # return redirect('profile')
     else:
         current_user = User.objects.last()
         form = UserAccountForm(initial={'user_id': current_user.id})
@@ -51,7 +50,6 @@ def profile(request):
     current_user_type = UserAccount.objects.get(
         user_id=current_user.id).usertype_name
     if current_user_type == 'jobseeker':
-        # try:
         jobseeker = SeekerProfile.objects.get(
             useraccount_id=current_user.id)
         jobseeker_education = jobseeker.educationdetail_set.first()
@@ -67,8 +65,6 @@ def profile(request):
             messages.success(
                 request, 'Your SkillSet Details Are Missing.')
         return redirect('educationdetail')
-        # except:
-        #    return redirect('seekerprofile')
 
     elif current_user_type == 'company':
         return redirect('jobtype')
