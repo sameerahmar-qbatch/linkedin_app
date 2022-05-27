@@ -21,7 +21,7 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(
-                request, f'Hi {username}, your account creation process has been started. Just provide little more details. Thankyou!')
+                request, f'Hi {username}, your account creation process has been started. Have patience and just provide little more details. Thankyou!')
             return redirect('useraccount')
     else:
         form = UserRegisterForm()
