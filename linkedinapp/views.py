@@ -54,9 +54,12 @@ def profile(request):
     current_user_type = UserAccount.get_usertype(current_user)
     if current_user_type == 'jobseeker':
         jobseeker = SeekerProfile.current_object(current_user)
-        jobseeker_education = EducationDetail.seeker_education(jobseeker)
-        jobseeker_experience = ExperienceDetail.seeker_experience(jobseeker)
-        jobseeker_skillset = SeekerSkillSet.seeker_skillset(jobseeker)
+        #jobseeker_education = EducationDetail.seeker_education(jobseeker)
+        #jobseeker_experience = ExperienceDetail.seeker_experience(jobseeker)
+        #jobseeker_skillset = SeekerSkillSet.seeker_skillset(jobseeker)
+        jobseeker_education = jobseeker.seeker_education()
+        jobseeker_experience = jobseeker.seeker_experience()
+        jobseeker_skillset = jobseeker.seeker_skillset()
         if jobseeker_education is None:
             messages.success(
                 request, 'Your Education Details Are Missing.')
@@ -215,10 +218,9 @@ def userdetail(request):
     }
     if current_user_type == 'jobseeker':
         jobseeker = SeekerProfile.current_object(current_user)
-        jobseeker_education = EducationDetail.seeker_education_all(jobseeker)
-        jobseeker_experience = ExperienceDetail.seeker_experience_all(
-            jobseeker)
-        jobseeker_skillset = SeekerSkillSet.seeker_skillset_all(jobseeker)
+        jobseeker_education = jobseeker.seeker_education_all()
+        jobseeker_experience = jobseeker.seeker_experience_all()
+        jobseeker_skillset = jobseeker.seeker_skillset_all()
         userdetail_dict['first_name'] = jobseeker.first_name
         userdetail_dict['last_name'] = jobseeker.last_name
         userdetail_dict['current_salary'] = jobseeker.current_salary
@@ -287,7 +289,7 @@ def userdetail(request):
         return render(request, 'linkedinapp/jobseekeruserdetail.html', userdetail_dict)
     elif current_user_type == 'company':
         company = Company.current_object(current_user)
-        company_jobpost = JobPost.company_jobpost_all(company)
+        company_jobpost = company.company_jobpost_all()
         userdetail_dict['company_name'] = company.company_name
         userdetail_dict['company_description'] = company.company_description
         userdetail_dict['establishment_date'] = company.establishment_date
