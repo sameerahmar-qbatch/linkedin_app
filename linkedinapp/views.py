@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 from linkedinapp.models import Company, JobLocation, JobPost, JobType, SeekerSkillSet, UserAccount, SeekerProfile, EducationDetail, ExperienceDetail, User
 
 
+def currentuser_id(request):
+    return request.user.id
+
+
 def home(request):
     return render(request, 'linkedinapp/home.html')
 
@@ -46,15 +50,13 @@ def useraccount(request):
 
 @login_required
 def profile(request):
-    current_user = request.user
-    current_user_type = UserAccount.objects.get(
-        user_id=current_user.id).usertype_name
+    current_user = currentuser_id(request)
+    current_user_type = UserAccount.get_usertype(current_user)
     if current_user_type == 'jobseeker':
-        jobseeker = SeekerProfile.objects.get(
-            useraccount_id=current_user.id)
-        jobseeker_education = jobseeker.educationdetail_set.first()
-        jobseeker_experience = jobseeker.experiencedetail_set.first()
-        jobseeker_skillset = jobseeker.seekerskillset_set.first()
+        jobseeker = SeekerProfile.current_object(current_user)
+        jobseeker_education = EducationDetail.seeker_education(jobseeker)
+        jobseeker_experience = ExperienceDetail.seeker_experience(jobseeker)
+        jobseeker_skillset = SeekerSkillSet.seeker_skillset(jobseeker)
         if jobseeker_education is None:
             messages.success(
                 request, 'Your Education Details Are Missing.')
@@ -99,9 +101,9 @@ def educationdetail(request):
                 request, 'Thankyou, for setting up the education details in your profile. If you want to add up another details, fill up the form again, otherwise shift to the experience detail form through the following link')
             return redirect('educationdetail')
     else:
-        current_user = request.user
+        current_user = currentuser_id(request)
         form = EducationDetailForm(
-            initial={'seekerprofile_id': current_user.id})
+            initial={'seekerprofile_id': current_user})
 
     return render(request, 'linkedinapp/educationdetail.html', {'form': form})
 
@@ -115,9 +117,9 @@ def experiencedetail(request):
                 request, 'Thankyou, for setting up the experience details in your profile. If you want to add up another details, fill up the form again, otherwise shift to the skillset form through the following link')
             return redirect('experiencedetail')
     else:
-        current_user = request.user
+        current_user = currentuser_id(request)
         form = ExperienceDetailForm(
-            initial={'seekerprofile_id': current_user.id})
+            initial={'seekerprofile_id': current_user})
 
     return render(request, 'linkedinapp/experiencedetail.html', {'form': form})
 
@@ -132,9 +134,9 @@ def seekerskillset(request):
                 request, 'Thankyou, for setting up the education details in your profile. If you want to add up another details, fill up the form again, otherwise shift to the home through the following link')
             return redirect('seekerskillset')
     else:
-        current_user = request.user
+        current_user = currentuser_id(request)
         form = SeekerSkillSetForm(
-            initial={'seekerprofile_id': current_user.id})
+            initial={'seekerprofile_id': current_user})
 
     return render(request, 'linkedinapp/seekerskillset.html', {'form': form})
 
@@ -192,11 +194,11 @@ def jobpost(request):
                 request, 'Job has been posted successfully!')
             return redirect('home')
     else:
-        current_user = request.user
+        current_user = currentuser_id(request)
         company_jobtype = JobType.objects.last()
         company_joblocation = JobLocation.objects.last()
         jobpost_dict = {
-            'company_id': current_user.id,
+            'company_id': current_user,
             'joblocation_id': company_joblocation,
             'jobtype_id': company_jobtype
         }
@@ -206,17 +208,17 @@ def jobpost(request):
 
 
 def userdetail(request):
-    current_user = request.user
-    current_user_type = UserAccount.objects.get(
-        user_id=current_user.id).usertype_name
+    current_user = currentuser_id(request)
+    current_user_type = UserAccount.get_usertype(current_user)
     userdetail_dict = {
         'current_user_type': current_user_type
     }
     if current_user_type == 'jobseeker':
-        jobseeker = SeekerProfile.objects.get(useraccount_id=current_user.id)
-        jobseeker_education = jobseeker.educationdetail_set.all()
-        jobseeker_experience = jobseeker.experiencedetail_set.all()
-        jobseeker_skillset = jobseeker.seekerskillset_set.all()
+        jobseeker = SeekerProfile.current_object(current_user)
+        jobseeker_education = EducationDetail.seeker_education_all(jobseeker)
+        jobseeker_experience = ExperienceDetail.seeker_experience_all(
+            jobseeker)
+        jobseeker_skillset = SeekerSkillSet.seeker_skillset_all(jobseeker)
         userdetail_dict['first_name'] = jobseeker.first_name
         userdetail_dict['last_name'] = jobseeker.last_name
         userdetail_dict['current_salary'] = jobseeker.current_salary
@@ -284,8 +286,8 @@ def userdetail(request):
                 request, 'SkillSet Details are Missing')
         return render(request, 'linkedinapp/jobseekeruserdetail.html', userdetail_dict)
     elif current_user_type == 'company':
-        company = Company.objects.get(useraccount_id=current_user.id)
-        company_jobpost = company.jobpost_set.all()
+        company = Company.current_object(current_user)
+        company_jobpost = JobPost.company_jobpost_all(company)
         userdetail_dict['company_name'] = company.company_name
         userdetail_dict['company_description'] = company.company_description
         userdetail_dict['establishment_date'] = company.establishment_date

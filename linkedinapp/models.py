@@ -13,6 +13,9 @@ class UserAccount(models.Model):
     usertype_name = models.CharField(
         max_length=9, choices=USER_TYPE, null=True)
 
+    def get_usertype(id):
+        return UserAccount.objects.get(user_id=id).usertype_name
+
 
 class SeekerProfile(models.Model):
     ANNUALY_MONTHLY = (
@@ -28,6 +31,9 @@ class SeekerProfile(models.Model):
         max_length=7, choices=ANNUALY_MONTHLY)
     currency = models.CharField(max_length=50)
 
+    def current_object(id):
+        return SeekerProfile.objects.get(useraccount_id=id)
+
 
 class EducationDetail(models.Model):
     seekerprofile_id = models.ForeignKey(
@@ -38,6 +44,12 @@ class EducationDetail(models.Model):
     completition_date = models.DateField()
     percentage = models.FloatField()
     cgpa = models.FloatField()
+
+    def seeker_education(jobseeker):
+        return jobseeker.educationdetail_set.first()
+
+    def seeker_education_all(jobseeker):
+        return jobseeker.educationdetail_set.all()
 
 
 class ExperienceDetail(models.Model):
@@ -56,6 +68,12 @@ class ExperienceDetail(models.Model):
     company_name = models.CharField(max_length=50)
     company_address = models.TextField()
 
+    def seeker_experience(jobseeker):
+        return jobseeker.experiencedetail_set.first()
+
+    def seeker_experience_all(jobseeker):
+        return jobseeker.experiencedetail_set.all()
+
 
 class SeekerSkillSet(models.Model):
     SKILL_LEVEL = (
@@ -71,6 +89,12 @@ class SeekerSkillSet(models.Model):
     skill_level = models.CharField(
         max_length=10, choices=SKILL_LEVEL)
 
+    def seeker_skillset(jobseeker):
+        return jobseeker.seekerskillset_set.first()
+
+    def seeker_skillset_all(jobseeker):
+        return jobseeker.seekerskillset_set.all()
+
 
 class Company(models.Model):
     useraccount_id = models.OneToOneField(
@@ -79,6 +103,9 @@ class Company(models.Model):
     company_description = models.TextField()
     establishment_date = models.DateField()
     company_website_url = models.URLField()
+
+    def current_object(id):
+        return Company.objects.get(useraccount_id=id)
 
 
 class JobType(models.Model):
@@ -108,6 +135,9 @@ class JobPost(models.Model):
     job_description = models.TextField()
     created_date = models.DateField()
     is_active = models.CharField(max_length=5, choices=IS_ACTIVE)
+
+    def company_jobpost_all(company):
+        return company.jobpost_set.all()
 
 
 class JobPostActivity(models.Model):
