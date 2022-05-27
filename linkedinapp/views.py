@@ -54,9 +54,6 @@ def profile(request):
     current_user_type = UserAccount.get_usertype(current_user)
     if current_user_type == 'jobseeker':
         jobseeker = SeekerProfile.current_object(current_user)
-        #jobseeker_education = EducationDetail.seeker_education(jobseeker)
-        #jobseeker_experience = ExperienceDetail.seeker_experience(jobseeker)
-        #jobseeker_skillset = SeekerSkillSet.seeker_skillset(jobseeker)
         jobseeker_education = jobseeker.seeker_education()
         jobseeker_experience = jobseeker.seeker_experience()
         jobseeker_skillset = jobseeker.seeker_skillset()
